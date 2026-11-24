@@ -1,0 +1,13 @@
+{
+  "name": "aurabot-plugins-template",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "AuraBot 插件模板仓库：一个仓库放多个插件，push 即自动构建发版",
+  "license": "MIT",
+  "scripts": {
+    "release": "node scripts/release.mjs",
+    "dry-run": "node scripts/release.mjs --dry-run"
+  }
+}
+

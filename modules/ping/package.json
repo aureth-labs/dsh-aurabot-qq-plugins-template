@@ -1,0 +1,30 @@
+{
+  "name": "shangxueink/ping",
+  "version": "1.0.0",
+  "description": "模板示例：注册一个 ping_now 工具和一个面板用的 /ping 路由，返回当前时间与运行时长。",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "author": "shangxueink",
+  "main": "lib/index.js",
+  "aurabot": {
+    "displayName": "示例：探活",
+    "panel": "./client/panel.js",
+    "category": "tool",
+    "capabilities": [],
+    "minPluginVersion": "1.2.0",
+    "api": 1,
+    "platforms": [
+      "*"
+    ]
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "test": "npm run build && node --test \"test/*.test.mjs\""
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "typescript": "^5.6.3"
+  }
+}
