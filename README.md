@@ -48,8 +48,10 @@ npm test
 
 改 `modules/<name>/package.json` 的 `version`（`1.0.0` → `1.0.1`），push 即可。
 
-脚本只构建版本号变过的模块；产物地址写在 `package.json` 的 `aurabot.artifact` 里，不要手改。
-`.aurabot/versions.json` 由首次 CI 构建自动生成并提交，记录已发布的版本，别加进 `.gitignore`。
+产物地址写在 `package.json` 的 `aurabot.artifact` 里，不要手改。
+
+`.aurabot/` 是本地/CI 的构建缓存，**故意不进仓库**：别人 fork 或 Use this template 之后，
+第一次构建会照常打包、把 `artifact` 改成他自己仓库的地址，不会因为继承了旧状态而被跳过。
 
 本地预览打包（不发 Release、不提交）：
 
