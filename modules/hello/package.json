@@ -21,8 +21,8 @@
     ],
     "artifact": {
       "url": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/releases/download/hello-v1.0.2/hello-v1.0.2.zip",
-      "sha256": "4036ba875453dd8fbbeb4d3ce95d9bedec1e0c2dfca5a0c8578e9229a4b5b129",
-      "size": 4008
+      "sha256": "b65469a0c9e014b0604af2c2a862c8b3293633208eb86b6d281ab6cdd546e1fa",
+      "size": 4006
     }
   },
   "scripts": {

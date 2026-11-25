@@ -15,7 +15,12 @@
     "api": 2,
     "platforms": [
       "*"
-    ]
+    ],
+    "artifact": {
+      "url": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/releases/download/bv-parse-v1.0.0/bv-parse-v1.0.0.zip",
+      "sha256": "6c85a1962bfe0bc9eaab464477194639052332643b4effa40f260fdef254cc50",
+      "size": 3175
+    }
   },
   "scripts": {
     "build": "node build.mjs",
