@@ -38,6 +38,10 @@ export function apply(ctx, config) {
 面板要拿数据就用 `ctx.server.get()` / `ctx.server.post()`，和 Koishi 一样是 HTTP 服务，不是另造一套路由。
 正式接口见文档站的「插件接口 v2」。
 
+> `apply(ctx, config)` 收到的 `config` 是**启动那一刻的快照**。面板保存设置后宿主只发 `config` 事件、
+> 不会重载插件，所以要在回调里重新读一次 `ctx.settings()`（见 `modules/auto-reply`），
+> 别把快照存到闭包里然后用一辈子。
+
 > 示例里的 `src/plugin-api.ts` **不是插件**，是 `@aurabot/plugin-api` 的本地替身：
 > 官方那个包只放 `Schema` 构造器和 `Ctx` 类型，还没发布，所以先复制一份进模块，
 > 保证示例能编译、能跑测试。发布后删掉这个文件，把 import 换成正式包即可。
@@ -50,6 +54,7 @@ scripts/release.mjs             # 上面那个 workflow 调用的脚本
 modules/hello/                  # 示例：指令 + AI 工具 + 面板路由
 modules/ping/                   # 示例：指令 + AI 工具 + 面板路由
 modules/bv-parse/               # 示例：中间件抢在模型前拦消息 + 同名指令，无面板
+modules/auto-reply/             # 示例：关键词自动回复，带自己的面板与 GET/POST 接口
 ```
 
 每个模块：
