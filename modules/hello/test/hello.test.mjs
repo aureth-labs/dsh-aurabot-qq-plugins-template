@@ -13,9 +13,12 @@ function boot(settings = {}) {
       tools.push(spec)
       return () => {}
     },
-    route: (path, handler) => {
-      routes.set(path, handler)
-      return () => {}
+    server: {
+      get: (path, handler) => {
+        routes.set(path, handler)
+        return () => {}
+      },
+      post: () => () => {},
     },
     command: (commandName) => {
       const command = {

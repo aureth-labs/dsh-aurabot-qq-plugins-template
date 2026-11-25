@@ -29,14 +29,18 @@ export function apply(ctx, config) {
   ctx.command('hello <text:string>').action(async ({ session }, text) => {
     await session.send(`${config.greeting}，${text}`)
   })
+
+  ctx.server.get('/info', () => ({ ok: true, greeting: config.greeting }))
 }
 ```
 
 `ctx` 是插件级上下文，`session` 是消息级上下文；`ctx.command` 用户直接触发，`ctx.tool` 交给模型调用。
+面板要拿数据就用 `ctx.server.get()` / `ctx.server.post()`，和 Koishi 一样是 HTTP 服务，不是另造一套路由。
 正式接口见文档站的「插件接口 v2」。
 
-> 示例里的 `src/plugin-api.ts` 是 `@aurabot/plugin-api` 的最小替身。那个包发布后删掉它，
-> 把 import 换成正式包即可。
+> 示例里的 `src/plugin-api.ts` **不是插件**，是 `@aurabot/plugin-api` 的本地替身：
+> 官方那个包只放 `Schema` 构造器和 `Ctx` 类型，还没发布，所以先复制一份进模块，
+> 保证示例能编译、能跑测试。发布后删掉这个文件，把 import 换成正式包即可。
 
 ## 目录
 

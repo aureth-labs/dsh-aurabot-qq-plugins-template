@@ -1,6 +1,6 @@
 {
   "name": "hello",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "模板示例：一个 hello 指令 + 一个 hello_echo 工具 + 一个 /info 路由。",
   "type": "module",
   "private": true,

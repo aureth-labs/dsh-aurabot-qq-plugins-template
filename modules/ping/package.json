@@ -1,6 +1,6 @@
 {
   "name": "ping",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "模板示例：一个 ping 指令 + 一个 ping_now 工具 + 一个 /ping 路由。",
   "type": "module",
   "private": true,

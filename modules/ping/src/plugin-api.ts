@@ -1,9 +1,9 @@
 /**
- * 最小插件接口实现。
+ * 这不是插件，是插件接口的本地替身。
  *
- * 正式写法是 `import { Schema } from '@aurabot/plugin-api'`。
- * 那个包还没发布，模板里先带一份等价的最小实现，保证示例能编译、能跑。
- * 发布后删掉本文件，把 index.ts 的 import 换掉即可。
+ * 正式写法是 `import { Schema } from '@aurabot/plugin-api'`。那个包还没发布，
+ * 模板先带一份等价的最小实现（Schema 构造器 + Ctx 类型），保证示例能编译、能跑。
+ * 发布后删掉本文件，把 index.ts 的 import 换成正式包即可。
  */
 
 export type SchemaType = 'boolean' | 'string' | 'number' | 'array' | 'union' | 'object'
@@ -115,6 +115,20 @@ export interface Command {
   action(handler: (args: { session: Session }, ...params: string[]) => unknown): Command
 }
 
+export type ServerHandler = (request: unknown) => unknown
+
+/** 和 Koishi 的 `ctx.server` 一样：一个 HTTP 路由实例，按动词注册。 */
+export interface Server {
+  get(path: string, handler: ServerHandler): () => void
+  post(path: string, handler: ServerHandler): () => void
+  put(path: string, handler: ServerHandler): () => void
+  patch(path: string, handler: ServerHandler): () => void
+  delete(path: string, handler: ServerHandler): () => void
+  head(path: string, handler: ServerHandler): () => void
+  options(path: string, handler: ServerHandler): () => void
+  all(path: string, handler: ServerHandler): () => void
+}
+
 export interface ToolSpec {
   name: string
   description: string
@@ -130,5 +144,5 @@ export interface Ctx {
   }
   command(name: string): Command
   tool(spec: ToolSpec): () => void
-  route(path: string, handler: (request: unknown) => unknown): () => void
+  server: Server
 }

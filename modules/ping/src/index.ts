@@ -25,7 +25,7 @@ export function apply(ctx: Ctx) {
     },
   })
 
-  ctx.route('/ping', () => ({ ok: true, at: new Date().toISOString(), uptimeMs: Date.now() - STARTED_AT }))
+  ctx.server.get('/ping', () => ({ ok: true, at: new Date().toISOString(), uptimeMs: Date.now() - STARTED_AT }))
 
   ctx.command('ping')
     .description('回一句 pong（用户直接触发，不经过模型）')

@@ -41,7 +41,7 @@ export function apply(ctx: Ctx, config: Config) {
     },
   })
 
-  ctx.route('/info', () => ({ ok: true, greeting: config.greeting, enabled: config.enabled }))
+  ctx.server.get('/info', () => ({ ok: true, greeting: config.greeting, enabled: config.enabled }))
 
   ctx.logger.info('[hello] 已启动')
 }
