@@ -9,7 +9,7 @@
    - `modules/hello/package.json`、`modules/ping/package.json` 里的 `name`：只写包名（如 `hello`），**不用加用户名前缀**
    - `author`、`description`、`displayName` 等
 3. push 到 `main`，Actions 会自动构建这两个插件
-4. 想加插件：复制 `modules/hello/` 整个目录，改名、改 `package.json`
+4. 想加插件：复制 `modules/hello/` 整个目录，改名、改 `package.json`；只用指令和中间件、不要面板的话，照 `modules/bv-parse/` 抄更省事
 5. 想删插件：直接删目录，索引里自然消失
 
 ## 插件长什么样
@@ -49,6 +49,7 @@ export function apply(ctx, config) {
 scripts/release.mjs             # 上面那个 workflow 调用的脚本
 modules/hello/                  # 示例：指令 + AI 工具 + 面板路由
 modules/ping/                   # 示例：指令 + AI 工具 + 面板路由
+modules/bv-parse/               # 示例：中间件抢在模型前拦消息 + 同名指令，无面板
 ```
 
 每个模块：

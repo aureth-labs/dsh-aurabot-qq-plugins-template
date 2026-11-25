@@ -1,0 +1,29 @@
+{
+  "name": "bv-parse",
+  "version": "1.0.0",
+  "description": "示例：消息里出现 BV 号就直接回一个可点的链接，不经过模型；同时提供 /bv 指令。",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "author": "shangxueink",
+  "main": "lib/index.js",
+  "aurabot": {
+    "displayName": "示例：BV 号解析",
+    "category": "tool",
+    "capabilities": [],
+    "minPluginVersion": "1.3.0",
+    "api": 2,
+    "platforms": [
+      "*"
+    ]
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "test": "npm run build && node --test \"test/*.test.mjs\""
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "typescript": "^5.6.3"
+  }
+}
