@@ -20,9 +20,9 @@
       "*"
     ],
     "artifact": {
-      "url": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/releases/download/hello-v1.0.1/hello-v1.0.1.zip",
-      "sha256": "55847a46f4ab8cea893900439719b4ed18e59c0b26563114cae5f9c913cca8c7",
-      "size": 4002
+      "url": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/releases/download/hello-v1.0.2/hello-v1.0.2.zip",
+      "sha256": "4036ba875453dd8fbbeb4d3ce95d9bedec1e0c2dfca5a0c8578e9229a4b5b129",
+      "size": 4008
     }
   },
   "scripts": {
