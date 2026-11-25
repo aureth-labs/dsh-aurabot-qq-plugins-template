@@ -1,7 +1,7 @@
 {
   "name": "hello",
-  "version": "1.0.0",
-  "description": "模板示例：注册一个 hello_echo 工具，把模型给的文字原样回给它。",
+  "version": "1.0.1",
+  "description": "模板示例：一个 hello 指令 + 一个 hello_echo 工具 + 一个 /info 路由。",
   "type": "module",
   "private": true,
   "license": "MIT",
@@ -15,7 +15,7 @@
       "plugin-config"
     ],
     "minPluginVersion": "1.2.0",
-    "api": 1,
+    "api": 2,
     "platforms": [
       "*"
     ],

@@ -1,43 +1,61 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import plugin from '../lib/index.js'
+import { name, config, apply } from '../lib/index.js'
 
-function boot(settings) {
+function boot(settings = {}) {
   const tools = []
   const routes = new Map()
-  const api = {
-    log: { info() {}, warn() {} },
-    settings: () => settings,
-    defineTool: (spec) => spec,
-    tool: (builder) => {
-      const made = builder({ chat: { kind: 'group', chatId: 'g1' } })
-      for (const one of Array.isArray(made) ? made : [made]) if (one) tools.push(one)
+  const commands = new Map()
+
+  const ctx = {
+    logger: { info() {}, warn() {}, error() {} },
+    tool: (spec) => {
+      tools.push(spec)
       return () => {}
     },
     route: (path, handler) => {
       routes.set(path, handler)
       return () => {}
     },
+    command: (commandName) => {
+      const command = {
+        description: () => command,
+        action: (handler) => {
+          commands.set(commandName, handler)
+          return command
+        },
+      }
+      return command
+    },
   }
-  plugin.setup(api)
-  return { tools, routes }
+
+  apply(ctx, { enabled: true, greeting: '你好', ...settings })
+  return { tools, routes, commands }
 }
 
-test('导出形状符合清单', () => {
-  assert.equal(plugin.api, 1)
-  assert.equal(plugin.panel, './dist/panel.js')
-  assert.equal(typeof plugin.setup, 'function')
+test('导出的是 Koishi 形态', () => {
+  assert.equal(name, 'hello')
+  assert.equal(config.meta.type, 'object')
+  assert.equal(typeof apply, 'function')
 })
 
 test('hello_echo 按问候语回话', async () => {
-  const { tools } = boot({ enabled: true, greeting: '嗨' })
+  const { tools } = boot({ greeting: '嗨' })
   assert.equal(tools.length, 1)
   assert.equal(tools[0].name, 'hello_echo')
-  const result = await tools[0].execute({ text: '世界' })
-  assert.deepEqual(result, { ok: true, message: '嗨，世界' })
+  assert.deepEqual(await tools[0].execute({ text: '世界' }), { ok: true, message: '嗨，世界' })
 })
 
 test('关掉总开关就不注册工具', () => {
-  const { tools } = boot({ enabled: false })
+  const { tools, commands } = boot({ enabled: false })
   assert.equal(tools.length, 0)
+  assert.equal(commands.size, 0)
+})
+
+test('hello 指令直接回话，不经过模型', async () => {
+  const { commands } = boot({ greeting: '嗨' })
+  const handler = commands.get('hello <text:string>')
+  const sent = []
+  await handler({ session: { userName: '小明', send: async (text) => sent.push(text) } }, '世界')
+  assert.deepEqual(sent, ['嗨，世界'])
 })

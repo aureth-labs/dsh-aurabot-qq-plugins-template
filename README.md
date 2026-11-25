@@ -12,13 +12,39 @@
 4. 想加插件：复制 `modules/hello/` 整个目录，改名、改 `package.json`
 5. 想删插件：直接删目录，索引里自然消失
 
+## 插件长什么样
+
+和 Koishi 一样：`name`、`config`、`apply(ctx, config)` 三个具名导出，没有默认导出。
+
+```ts
+import { Schema } from '@aurabot/plugin-api'
+
+export const name = 'hello'
+
+export const config = Schema.object({
+  greeting: Schema.string().default('你好').description('问候语'),
+})
+
+export function apply(ctx, config) {
+  ctx.command('hello <text:string>').action(async ({ session }, text) => {
+    await session.send(`${config.greeting}，${text}`)
+  })
+}
+```
+
+`ctx` 是插件级上下文，`session` 是消息级上下文；`ctx.command` 用户直接触发，`ctx.tool` 交给模型调用。
+正式接口见文档站的「插件接口 v2」。
+
+> 示例里的 `src/plugin-api.ts` 是 `@aurabot/plugin-api` 的最小替身。那个包发布后删掉它，
+> 把 import 换成正式包即可。
+
 ## 目录
 
 ```
 .github/workflows/release.yml   # 构建 + 发 Release + 回写 artifact
 scripts/release.mjs             # 上面那个 workflow 调用的脚本
-modules/hello/                  # 示例：注册一个 AI 工具
-modules/ping/                   # 示例：注册一个 HTTP 路由
+modules/hello/                  # 示例：指令 + AI 工具 + 面板路由
+modules/ping/                   # 示例：指令 + AI 工具 + 面板路由
 ```
 
 每个模块：
@@ -28,7 +54,8 @@ modules/<name>/
 ├─ package.json      # 唯一清单：name / version / aurabot 段
 ├─ tsconfig.json     # 后台：NodeNext，src → lib
 ├─ tsconfig.client.json  # 面板：client → dist
-├─ src/index.ts      # 入口，默认导出插件对象
+├─ src/index.ts      # 入口：export const name / config + export function apply
+├─ src/plugin-api.ts # 临时替身：等 @aurabot/plugin-api 发布后删掉
 ├─ client/panel.ts   # 面板源码，编译成 dist/panel.js
 ├─ test/             # 不进发布包
 ├─ README.md

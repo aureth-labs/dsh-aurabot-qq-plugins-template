@@ -1,7 +1,7 @@
 {
   "name": "ping",
-  "version": "1.0.0",
-  "description": "模板示例：注册一个 ping_now 工具和一个面板用的 /ping 路由，返回当前时间与运行时长。",
+  "version": "1.0.1",
+  "description": "模板示例：一个 ping 指令 + 一个 ping_now 工具 + 一个 /ping 路由。",
   "type": "module",
   "private": true,
   "license": "MIT",
@@ -13,7 +13,7 @@
     "category": "tool",
     "capabilities": [],
     "minPluginVersion": "1.2.0",
-    "api": 1,
+    "api": 2,
     "platforms": [
       "*"
     ],

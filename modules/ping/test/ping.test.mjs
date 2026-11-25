@@ -1,30 +1,42 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import plugin from '../lib/index.js'
+import { name, config, apply } from '../lib/index.js'
 
 function boot() {
   const tools = []
   const routes = new Map()
-  const api = {
-    log: { info() {}, warn() {} },
-    defineTool: (spec) => spec,
-    tool: (builder) => {
-      const made = builder({ chat: { kind: 'private', chatId: 'p1' } })
-      for (const one of Array.isArray(made) ? made : [made]) if (one) tools.push(one)
+  const commands = new Map()
+
+  const ctx = {
+    logger: { info() {}, warn() {}, error() {} },
+    tool: (spec) => {
+      tools.push(spec)
       return () => {}
     },
     route: (path, handler) => {
       routes.set(path, handler)
       return () => {}
     },
+    command: (commandName) => {
+      const command = {
+        description: () => command,
+        action: (handler) => {
+          commands.set(commandName, handler)
+          return command
+        },
+      }
+      return command
+    },
   }
-  plugin.setup(api)
-  return { tools, routes }
+
+  apply(ctx)
+  return { tools, routes, commands }
 }
 
-test('导出形状符合清单', () => {
-  assert.equal(plugin.api, 1)
-  assert.equal(plugin.panel, './dist/panel.js')
+test('导出的是 Koishi 形态', () => {
+  assert.equal(name, 'ping')
+  assert.equal(config.meta.type, 'object')
+  assert.equal(typeof apply, 'function')
 })
 
 test('ping_now 返回时间与运行时长', async () => {
@@ -42,4 +54,11 @@ test('/ping 路由可用', () => {
   const handler = routes.get('/ping')
   assert.equal(typeof handler, 'function')
   assert.equal(handler({}).ok, true)
+})
+
+test('ping 指令回 pong', async () => {
+  const { commands } = boot()
+  const sent = []
+  await commands.get('ping')({ session: { send: async (text) => sent.push(text) } })
+  assert.deepEqual(sent, ['pong'])
 })

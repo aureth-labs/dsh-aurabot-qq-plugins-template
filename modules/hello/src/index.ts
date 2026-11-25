@@ -1,66 +1,47 @@
-interface Api {
-  log: { info(...args: any[]): void; warn(...args: any[]): void }
-  settings(): Record<string, any>
-  defineTool(spec: any): any
-  tool(builder: any): () => void
-  route(path: string, handler: (req: any) => any): () => void
-}
+import { Schema, type Ctx } from './plugin-api.js'
 
-interface Settings {
+export const name = 'hello'
+
+export interface Config {
   enabled: boolean
   greeting: string
 }
 
-const DEFAULTS: Settings = { enabled: true, greeting: '你好' }
+export const config = Schema.object({
+  enabled: Schema.boolean().default(true).description('总开关：关掉后不再注册 hello_echo'),
+  greeting: Schema.string().default('你好').description('回话时放在最前面的那句话'),
+})
 
-export default {
-  id: 'shangxueink/hello',
-  name: '示例：打招呼',
-  version: '1.0.0',
-  api: 1,
-  description: '模板示例：注册一个 hello_echo 工具，把模型给的文字原样回给它',
-  panel: './dist/panel.js',
-  defaults: { ...DEFAULTS },
-  settings: [
-    {
-      key: 'enabled',
-      label: '总开关',
-      type: 'switch',
-      hint: '关掉后就不再向模型提供 hello_echo 工具',
-    },
-    {
-      key: 'greeting',
-      label: '问候语',
-      type: 'text',
-      hint: '回话时放在最前面的那句话',
-    },
-  ],
+export function apply(ctx: Ctx, config: Config) {
+  if (!config.enabled) {
+    ctx.logger.info('[hello] 已关闭，跳过注册')
+    return
+  }
 
-  setup(api: Api) {
-    const read = (): Settings => ({ ...DEFAULTS, ...(api.settings() || {}) })
-
-    api.tool(({ chat }: any) => {
-      if (!chat || chat.kind === 'system') return []
-      if (!read().enabled) return []
-      return api.defineTool({
-        name: 'hello_echo',
-        description: '把给定的一句话加上问候语回给模型。用于验证插件装好了、工具能注册上。',
-        properties: {
-          text: { type: 'string', description: '要回显的文字' },
-        },
-        required: ['text'],
-        execute: async (args: any) => {
-          const text = String((args && args.text) || '').trim()
-          if (!text) return { ok: false, message: 'text 是空的' }
-          const greeting = read().greeting || DEFAULTS.greeting
-          return { ok: true, message: `${greeting}，${text}` }
-        },
-      })
+  ctx.command('hello <text:string>')
+    .description('让机器人打个招呼（用户直接触发，不经过模型）')
+    .action(async ({ session }, text) => {
+      await session.send(`${config.greeting}，${text || session.userName || '陌生人'}`)
     })
 
-    api.route('/info', () => ({ ok: true, greeting: read().greeting, enabled: read().enabled }))
+  ctx.tool({
+    name: 'hello_echo',
+    description: '把给定的一句话加上问候语回给模型。用于验证插件装好了、工具能注册上。',
+    parameters: {
+      type: 'object',
+      properties: {
+        text: { type: 'string', description: '要回显的文字' },
+      },
+      required: ['text'],
+    },
+    execute(args) {
+      const text = String(args.text ?? '').trim()
+      if (!text) return { ok: false, message: 'text 是空的' }
+      return { ok: true, message: `${config.greeting}，${text}` }
+    },
+  })
 
-    api.log.info('[hello] 示例插件已启动')
-    return {}
-  },
+  ctx.route('/info', () => ({ ok: true, greeting: config.greeting, enabled: config.enabled }))
+
+  ctx.logger.info('[hello] 已启动')
 }

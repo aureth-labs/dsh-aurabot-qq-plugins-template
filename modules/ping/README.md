@@ -1,8 +1,9 @@
 # 示例：探活
 
-演示不带任何能力（`capabilities: []`）的插件怎么写：一个 AI 工具 + 一个面板路由。
+演示不带任何能力（`capabilities: []`）的插件怎么写：一个指令、一个 AI 工具、一个面板路由。
 
+- 指令 `ping`：回一句 `pong`，不经过模型
 - 工具 `ping_now`：返回服务器时间和模块运行时长
 - 路由 `/ping`：面板上的「测一下」按钮调它
 
-改 `package.json` 的 `name` 为 `你的GitHub用户名/ping`。
+`package.json` 的 `name` 只写包名（如 `ping`），不用加用户名前缀。
