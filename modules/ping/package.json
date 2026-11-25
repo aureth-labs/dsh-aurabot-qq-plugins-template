@@ -18,7 +18,7 @@
       "*"
     ],
     "artifact": {
-      "url": "https://github.com/shangxueink/dsh-aurabot-qq-plugins-template/releases/download/ping-v1.0.0/ping-v1.0.0.zip",
+      "url": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/releases/download/ping-v1.0.0/ping-v1.0.0.zip",
       "sha256": "0ddcc5c097f195bc19dc7e749c2928d04566e98b7af4fc77f3949b013bfc260a",
       "size": 3314
     }
