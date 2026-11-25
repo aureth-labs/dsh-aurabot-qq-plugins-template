@@ -25,7 +25,7 @@ function boot(settings) {
 
 test('导出形状符合清单', () => {
   assert.equal(plugin.api, 1)
-  assert.equal(plugin.panel, './client/panel.js')
+  assert.equal(plugin.panel, './dist/panel.js')
   assert.equal(typeof plugin.setup, 'function')
 })
 

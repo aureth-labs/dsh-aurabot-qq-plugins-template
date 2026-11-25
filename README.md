@@ -6,7 +6,7 @@
 
 1. 点右上角 **Use this template**（或 fork / 下载 zip）
 2. 改两处：
-   - `modules/hello/package.json`、`modules/ping/package.json` 里的 `name`：`你的GitHub用户名/模块名`
+   - `modules/hello/package.json`、`modules/ping/package.json` 里的 `name`：只写包名（如 `hello`），**不用加用户名前缀**
    - `author`、`description`、`displayName` 等
 3. push 到 `main`，Actions 会自动构建这两个插件
 4. 想加插件：复制 `modules/hello/` 整个目录，改名、改 `package.json`
@@ -26,9 +26,10 @@ modules/ping/                   # 示例：注册一个 HTTP 路由
 ```
 modules/<name>/
 ├─ package.json      # 唯一清单：name / version / aurabot 段
-├─ tsconfig.json     # NodeNext，src → lib
+├─ tsconfig.json     # 后台：NodeNext，src → lib
+├─ tsconfig.client.json  # 面板：client → dist
 ├─ src/index.ts      # 入口，默认导出插件对象
-├─ client/panel.js   # 面板（默认路径）
+├─ client/panel.ts   # 面板源码，编译成 dist/panel.js
 ├─ test/             # 不进发布包
 ├─ README.md
 └─ LICENSE

@@ -19,7 +19,7 @@ export default {
   version: '1.0.0',
   api: 1,
   description: '模板示例：注册一个 hello_echo 工具，把模型给的文字原样回给它',
-  panel: './client/panel.js',
+  panel: './dist/panel.js',
   defaults: { ...DEFAULTS },
   settings: [
     {

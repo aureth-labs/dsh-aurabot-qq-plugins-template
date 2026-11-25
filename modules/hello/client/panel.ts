@@ -1,4 +1,13 @@
-return function HelloPanel(props) {
+declare const React: any
+declare const h: any
+declare const ui: any
+declare const call: (path: string, body?: any) => Promise<any>
+
+interface PanelProps {
+  toast(message: string, kind?: string): void
+}
+
+export default function HelloPanel(props: PanelProps) {
   var toast = props.toast;
   var infoState = React.useState(null);
   var info = infoState[0];
@@ -24,4 +33,4 @@ return function HelloPanel(props) {
       title: '示例插件',
       desc: '这个面板只读，用来确认 /info 路由通了、面板文件被正确加载。',
     }, rows));
-};
+}

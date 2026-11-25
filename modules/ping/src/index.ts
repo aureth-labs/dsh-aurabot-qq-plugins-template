@@ -17,7 +17,7 @@ export default {
   version: '1.0.0',
   api: 1,
   description: '模板示例：注册 ping_now 工具和 /ping 路由，返回当前时间与模块运行时长',
-  panel: './client/panel.js',
+  panel: './dist/panel.js',
   defaults: {},
   settings: [],
 

@@ -1,4 +1,13 @@
-return function PingPanel(props) {
+declare const React: any
+declare const h: any
+declare const ui: any
+declare const call: (path: string, body?: any) => Promise<any>
+
+interface PanelProps {
+  toast(message: string, kind?: string): void
+}
+
+export default function PingPanel(props: PanelProps) {
   var toast = props.toast;
   var state = React.useState(null);
   var result = state[0];
@@ -29,4 +38,4 @@ return function PingPanel(props) {
 
   return h('div', { className: 'ab-grid' },
     h(ui.Card, { title: '探活', desc: '面板通过 call() 调本模块的 /ping 路由，不经过网络。', extra: button }, body));
-};
+}

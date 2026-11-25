@@ -1,5 +1,5 @@
 {
-  "name": "shangxueink/hello",
+  "name": "hello",
   "version": "1.0.0",
   "description": "模板示例：注册一个 hello_echo 工具，把模型给的文字原样回给它。",
   "type": "module",
@@ -9,7 +9,7 @@
   "main": "lib/index.js",
   "aurabot": {
     "displayName": "示例：打招呼",
-    "panel": "./client/panel.js",
+    "panel": "./dist/panel.js",
     "category": "tool",
     "capabilities": [
       "plugin-config"
@@ -21,8 +21,8 @@
     ]
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "check": "tsc -p tsconfig.json --noEmit",
+    "build": "node build.mjs",
+    "check": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.client.json --noEmit",
     "test": "npm run build && node --test \"test/*.test.mjs\""
   },
   "devDependencies": {

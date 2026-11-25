@@ -24,7 +24,7 @@ function boot() {
 
 test('导出形状符合清单', () => {
   assert.equal(plugin.api, 1)
-  assert.equal(plugin.panel, './client/panel.js')
+  assert.equal(plugin.panel, './dist/panel.js')
 })
 
 test('ping_now 返回时间与运行时长', async () => {
