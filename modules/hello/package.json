@@ -1,6 +1,6 @@
 {
   "name": "hello",
-  "version": "1.0.2",
+  "version": "2.0.0-beta.1",
   "description": "模板示例：一个 hello 指令 + 一个 hello_echo 工具 + 一个 /info 路由。",
   "type": "module",
   "private": true,
@@ -14,16 +14,12 @@
     "capabilities": [
       "plugin-config"
     ],
-    "minPluginVersion": "1.2.0",
+    "minPluginVersion": "2.0.0-beta.1",
     "api": 2,
     "platforms": [
       "*"
     ],
-    "artifact": {
-      "url": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/releases/download/hello-v1.0.2/hello-v1.0.2.zip",
-      "sha256": "77ef05cadd66294c570c5fa142b43dfe69f255e84307821cc5de2da7c46da1d2",
-      "size": 4016
-    }
+    "reloadOnConfig": true
   },
   "scripts": {
     "build": "node build.mjs",
@@ -32,6 +28,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.20.5",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "@aurabot/plugin-api": "file:../../vendor/aurabot-plugin-api-2.0.0-beta.1.tgz"
   }
 }

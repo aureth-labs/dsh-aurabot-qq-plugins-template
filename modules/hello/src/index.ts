@@ -1,4 +1,4 @@
-import { Schema, type Ctx } from './plugin-api.js'
+import { Schema, type Ctx } from '@aurabot/plugin-api'
 
 export const name = 'hello'
 

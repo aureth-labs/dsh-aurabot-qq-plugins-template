@@ -1,6 +1,6 @@
 {
   "name": "remind",
-  "version": "1.0.0",
+  "version": "2.0.0-beta.1",
   "description": "示例：到点提醒。模型调 remind 工具或用户发 /remind 都能用，定时器随模块卸载自动清。",
   "type": "module",
   "private": true,
@@ -13,17 +13,12 @@
     "capabilities": [
       "plugin-config"
     ],
-    "minPluginVersion": "1.3.0",
+    "minPluginVersion": "2.0.0-beta.1",
     "api": 2,
     "platforms": [
       "*"
     ],
-    "reloadOnConfig": true,
-    "artifact": {
-      "url": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/releases/download/remind-v1.0.0/remind-v1.0.0.zip",
-      "sha256": "3780df6a22b6a3ab233d66ea502714c1c047c6406e49e74620d039fd046c1e26",
-      "size": 4350
-    }
+    "reloadOnConfig": true
   },
   "scripts": {
     "build": "node build.mjs",
@@ -32,6 +27,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.20.5",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "@aurabot/plugin-api": "file:../../vendor/aurabot-plugin-api-2.0.0-beta.1.tgz"
   }
 }

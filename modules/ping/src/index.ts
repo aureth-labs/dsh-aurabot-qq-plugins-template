@@ -1,4 +1,4 @@
-import { Schema, type Ctx } from './plugin-api.js'
+import { Schema, type Ctx } from '@aurabot/plugin-api'
 
 const STARTED_AT = Date.now()
 

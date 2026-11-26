@@ -9,7 +9,6 @@
 ```text
 modules/auto-reply/
   src/index.ts          插件本体（中间件 + 两个接口）
-  src/plugin-api.ts     接口替身（正式包发布后删掉）
   client/panel.ts       面板源码，build 时编成 dist/panel.js
   test/                 单测，不进发布包
 ```

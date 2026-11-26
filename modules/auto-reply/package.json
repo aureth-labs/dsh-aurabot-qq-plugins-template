@@ -1,6 +1,6 @@
 {
   "name": "auto-reply",
-  "version": "1.0.0",
+  "version": "2.0.0-beta.1",
   "description": "示例：关键词自动回复。面板里加规则，命中就直接回，不消耗模型。",
   "type": "module",
   "private": true,
@@ -14,16 +14,11 @@
     "capabilities": [
       "plugin-config"
     ],
-    "minPluginVersion": "1.3.0",
+    "minPluginVersion": "2.0.0-beta.1",
     "api": 2,
     "platforms": [
       "*"
-    ],
-    "artifact": {
-      "url": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/releases/download/auto-reply-v1.0.0/auto-reply-v1.0.0.zip",
-      "sha256": "083ea5e17a0fe35c6bc4cabe4efbd0cb53e4a4930fe18e7386e7964a02b48a1b",
-      "size": 6428
-    }
+    ]
   },
   "scripts": {
     "build": "node build.mjs",
@@ -32,6 +27,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.20.5",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "@aurabot/plugin-api": "file:../../vendor/aurabot-plugin-api-2.0.0-beta.1.tgz"
   }
 }

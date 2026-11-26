@@ -1,6 +1,6 @@
 {
   "name": "ping",
-  "version": "1.0.2",
+  "version": "2.0.0-beta.1",
   "description": "模板示例：一个 ping 指令 + 一个 ping_now 工具 + 一个 /ping 路由。",
   "type": "module",
   "private": true,
@@ -12,16 +12,12 @@
     "panel": "./dist/panel.js",
     "category": "tool",
     "capabilities": [],
-    "minPluginVersion": "1.2.0",
+    "minPluginVersion": "2.0.0-beta.1",
     "api": 2,
     "platforms": [
       "*"
     ],
-    "artifact": {
-      "url": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/releases/download/ping-v1.0.2/ping-v1.0.2.zip",
-      "sha256": "feec6e64567a416a73290a155da9487afd75c45d3bf0dda89da123c0d7a7cbab",
-      "size": 3880
-    }
+    "reloadOnConfig": true
   },
   "scripts": {
     "build": "node build.mjs",
@@ -30,6 +26,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.20.5",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "@aurabot/plugin-api": "file:../../vendor/aurabot-plugin-api-2.0.0-beta.1.tgz"
   }
 }

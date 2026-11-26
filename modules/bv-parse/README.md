@@ -8,8 +8,7 @@
 ```text
 modules/bv-parse/
   src/index.ts          插件本体
-  src/plugin-api.ts     接口替身（正式包发布后删掉，换成 @aurabot/plugin-api）
   build.mjs             src → lib
 ```
 
-改完跑 `npm run build`，宿主那边保存即热重载（它只认 `lib/` 的产物）。
+发行前运行 `npm run build`。开发时可将 main 指向 src/index.ts，保存源码即可重载。

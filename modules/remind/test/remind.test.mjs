@@ -20,7 +20,7 @@ function boot(settings = {}) {
   const ctx = {
     logger: { info() {}, warn() {}, error() {} },
     tool: (spec) => {
-      tools.push(spec)
+      tools.push(spec({ target: { platform: 'qq', botId: 'onebot', type: 'private', id: '10000001' } }))
       return () => {}
     },
     command: (commandName) => {
@@ -39,8 +39,9 @@ function boot(settings = {}) {
       timers.push({ ms, fn })
       return () => {}
     },
-    bots: Object.assign([bot], { list: () => [bot] }),
-    config: () => ({ ownerQQ: '10000001' }),
+    bots: { get: (id, platform) => id === bot.id && platform === bot.platform ? bot : undefined },
+    isOwner: id => id === '10000001',
+    defineTool: spec => ({ ...spec, parameters: { properties: spec.properties, required: spec.required } }),
   }
 
   apply(ctx, { enabled: true, maxMinutes: 120, everyReminderSuffix: '⏰ 提醒：', ...settings })
@@ -50,7 +51,7 @@ function boot(settings = {}) {
 function sessionOf(userName = '小明') {
   const sent = []
   const session = {
-    userId: '10001',
+    platform: 'qq', bot: { id: 'onebot' }, userId: '10001',
     userName,
     channelId: 'group-1',
     content: '',
@@ -62,7 +63,7 @@ function sessionOf(userName = '小明') {
 
 test('导出的是 Koishi 形态', () => {
   assert.equal(name, 'remind')
-  assert.equal(config.meta.type, 'object')
+  assert.equal(config.kind, 'object')
   assert.equal(typeof apply, 'function')
 })
 
@@ -86,7 +87,7 @@ test('模型调工具：到点私聊主人', async () => {
   assert.equal(timers[0].ms, 600_000)
 
   await timers[0].fn()
-  assert.deepEqual(sentPrivate, [['10000001', '<text>⏰ 提醒：喝水</text>']])
+  assert.deepEqual(sentPrivate, [['10000001', { type: 'text', attrs: { content: '⏰ 提醒：喝水' } }]])
 })
 
 test('工具参数不合法时不排定时器', async () => {
@@ -127,7 +128,7 @@ test('指令参数不合法时只回原因，不排定时器', async () => {
   assert.equal(timers.length, 0)
 })
 
-test('没配主人 QQ 时不排定时器', async () => {
+test('缺少来源会话时不向模型提供提醒工具', async () => {
   const tools = []
   const timers = []
 
@@ -156,8 +157,6 @@ test('没配主人 QQ 时不排定时器', async () => {
 
   apply(ctx, { enabled: true, maxMinutes: 120, everyReminderSuffix: '⏰ 提醒：' })
 
-  const result = await tools[0].execute({ minutes: 1, text: '测试' })
-  assert.equal(result.ok, false)
-  assert.ok(result.message.includes('主人'))
+  assert.equal(tools[0]({}), null)
   assert.equal(timers.length, 0)
 })

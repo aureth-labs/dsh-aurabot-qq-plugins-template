@@ -2,9 +2,10 @@ import {
   Schema,
   type AdapterRuntime,
   type AdapterSpec,
-  type BotLike,
+  Bot,
+  type Capability,
   type Ctx,
-} from './plugin-api.js'
+} from '@aurabot/plugin-api'
 
 export const name = 'mock-adapter'
 
@@ -27,7 +28,7 @@ interface OutboxItem {
  *   2. 把平台消息用 `runtime.emitMessage()` 投进管线
  *   3. 实现 Bot 的发送方法（这里写进内存 outbox，方便用 HTTP 看）
  */
-export function apply(ctx: Ctx, cfg: { platform?: string }) {
+export async function apply(ctx: Ctx, cfg: { platform?: string }) {
   const platform = String(cfg?.platform || 'mock')
   const outbox: OutboxItem[] = []
   let runtime: AdapterRuntime | null = null
@@ -39,21 +40,21 @@ export function apply(ctx: Ctx, cfg: { platform?: string }) {
 
     async connect(_config, rt) {
       runtime = rt
-      const bot: BotLike = {
-        id: `${platform}:demo`,
-        platform,
-        selfId: 'demo-bot',
-        status: 'online',
-        supports: (capability) => capability === 'text',
-        async sendMessage(channelId, content) {
-          outbox.push({ method: 'sendMessage', target: String(channelId), content, at: new Date().toISOString() })
-          return { ok: true, message_id: `demo-${outbox.length}` }
-        },
-        async sendPrivateMessage(userId, content) {
-          outbox.push({ method: 'sendPrivateMessage', target: String(userId), content, at: new Date().toISOString() })
-          return { ok: true, message_id: `demo-${outbox.length}` }
-        },
-      }
+      const bot = new class extends Bot {
+        readonly id = ctx.instanceId
+        readonly platform = platform
+        readonly selfId = 'demo-bot'
+        readonly status = 'online' as const
+        supports(capability: Capability) { return capability === 'text' }
+        async sendMessage(channelId: string, content: unknown) {
+          outbox.push({ method: 'sendMessage', target: channelId, content, at: new Date().toISOString() })
+          return { ok: true, id: String(outbox.length) }
+        }
+        async sendPrivateMessage(userId: string, content: unknown) {
+          outbox.push({ method: 'sendPrivateMessage', target: userId, content, at: new Date().toISOString() })
+          return { ok: true, id: String(outbox.length) }
+        }
+      }()
       rt.log(`演示适配器上线：${platform}/${bot.selfId}`)
       return bot
     },
@@ -63,12 +64,12 @@ export function apply(ctx: Ctx, cfg: { platform?: string }) {
     },
   }
 
-  ctx.adapter(spec).catch((error: Error) => ctx.logger.error(`演示适配器没起来：${error.message}`))
+  await ctx.adapter(spec)
 
   // 模拟「平台来了一条消息」：投进管线，指令 / 中间件 / 模型照常跑。
   ctx.server.post('/inject', async (request) => {
     if (!runtime) return { ok: false, message: '适配器还没上线' }
-    const body = await ctx.core!.http.body(request)
+    const body = await ctx.http.body(request)
     const text = String(body.text || '')
     if (!text.trim()) return { ok: false, message: 'text 不能为空' }
     runtime.emitMessage({

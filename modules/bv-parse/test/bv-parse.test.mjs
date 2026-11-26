@@ -42,7 +42,7 @@ function fakeSession(content) {
 
 test('导出的是 Koishi 形态', () => {
   assert.equal(name, 'bv-parse')
-  assert.equal(config.meta.type, 'object')
+  assert.equal(config.kind, 'object')
   assert.equal(typeof apply, 'function')
 })
 

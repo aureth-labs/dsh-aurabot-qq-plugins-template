@@ -1,6 +1,6 @@
 {
   "name": "mock-adapter",
-  "version": "1.0.0",
+  "version": "2.0.0-beta.1",
   "description": "模板示例：适配器即插件——不联网的演示平台，用 HTTP 注入消息验证管线。",
   "type": "module",
   "private": true,
@@ -12,16 +12,12 @@
     "category": "tool",
     "kind": "adapter",
     "capabilities": [],
-    "minPluginVersion": "1.3.0",
+    "minPluginVersion": "2.0.0-beta.1",
     "api": 2,
     "platforms": [
       "*"
     ],
-    "artifact": {
-      "url": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/releases/download/mock-adapter-v1.0.0/mock-adapter-v1.0.0.zip",
-      "sha256": "3d8416b60cc622ee7ad7c01072fa1c6dd856984f00b1bf6553c1eb34089aa2cd",
-      "size": 3717
-    }
+    "reloadOnConfig": true
   },
   "scripts": {
     "build": "node build.mjs",
@@ -29,6 +25,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.20.5",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "@aurabot/plugin-api": "file:../../vendor/aurabot-plugin-api-2.0.0-beta.1.tgz"
   }
 }

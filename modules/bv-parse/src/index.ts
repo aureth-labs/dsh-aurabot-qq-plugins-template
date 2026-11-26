@@ -1,4 +1,4 @@
-import { Schema, type Ctx } from './plugin-api.js'
+import { Schema, type Ctx } from '@aurabot/plugin-api'
 
 // 消息里出现 BV 号就直接回一个可点的链接，不经过模型。
 // 这是「中间件插件」的最小样子：先注册中间件分词，再挂一个同名指令给用户主动查。

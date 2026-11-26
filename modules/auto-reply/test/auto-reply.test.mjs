@@ -26,12 +26,8 @@ function boot(settings = {}) {
       patch: register('PATCH'),
       delete: register('DELETE'),
     },
-    core: {
-      http: {
-        body: async (request) => (request && request.body) || {},
-      },
-    },
-    settings: () => ({ ...live }),
+    http: { body: async request => request?.body || {} },
+    get config() { return live },
     on: (event, handler) => {
       listeners.set(event, handler)
       return () => {}
@@ -67,7 +63,7 @@ const CONTAINS_RULE = { pattern: '打卡', reply: '收到，{user} 已打卡', m
 
 test('导出的是 Koishi 形态', () => {
   assert.equal(name, 'auto-reply')
-  assert.equal(config.meta.type, 'object')
+  assert.equal(config.kind, 'object')
   assert.equal(typeof apply, 'function')
 })
 

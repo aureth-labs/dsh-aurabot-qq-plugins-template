@@ -1,4 +1,4 @@
-import { Schema, type Ctx, type Session } from './plugin-api.js'
+import { Schema, type Ctx, type Session } from '@aurabot/plugin-api'
 
 export const name = 'auto-reply'
 
@@ -92,7 +92,7 @@ function compileAll(input: Config): RuleState {
  * 所以每次要用都向宿主问一次最新值，别把快照存起来。
  */
 function settingsOf(ctx: Ctx, fallback: Config): Config {
-  const read = ctx.settings?.()
+  const read = ctx.config
   if (!read || typeof read !== 'object') return fallback
   return {
     enabled: read.enabled !== false,
@@ -149,7 +149,7 @@ export function apply(ctx: Ctx, config: Config) {
 
   // 面板试匹配：给一段话，看会被哪条接住；不改任何状态
   ctx.server.post('/test', async (request) => {
-    const body = await readJsonBody(ctx, request)
+    const body = await ctx.http.body(request)
     const text = String(body.text || '')
     if (!text) return { ok: false, message: '给我一段话再试' }
 
@@ -166,20 +166,4 @@ export function apply(ctx: Ctx, config: Config) {
   })
 
   ctx.logger.info('[auto-reply] 已启动，' + state.rules.length + ' 条规则')
-}
-
-/** POST body 统一从宿主的 http.body 拿：它已经解好 JSON，也带大小限制。 */
-async function readJsonBody(ctx: Ctx, request: unknown): Promise<Record<string, any>> {
-  const direct = (request as { body?: unknown })?.body
-  if (direct && typeof direct === 'object') return direct as Record<string, any>
-
-  const reader = ctx.core?.http?.body
-  if (typeof reader !== 'function') return {}
-
-  try {
-    const parsed = await reader(request)
-    return parsed && typeof parsed === 'object' ? parsed : {}
-  } catch {
-    return {}
-  }
 }
