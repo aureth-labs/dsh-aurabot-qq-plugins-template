@@ -18,8 +18,8 @@
     ],
     "artifact": {
       "url": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/releases/download/bv-parse-v1.0.0/bv-parse-v1.0.0.zip",
-      "sha256": "ba1653f41d45298ec8e6d034f72e1132fee0049895df5453cb8648b79bff8eca",
-      "size": 3343
+      "sha256": "5f78a9f092e520b955a4ec221a7624442905a5a31029cc8663f16abb781beef5",
+      "size": 3344
     }
   },
   "scripts": {
