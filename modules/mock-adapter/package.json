@@ -10,6 +10,7 @@
   "aurabot": {
     "displayName": "示例：演示适配器",
     "category": "tool",
+    "kind": "adapter",
     "capabilities": [],
     "minPluginVersion": "1.3.0",
     "api": 2,
