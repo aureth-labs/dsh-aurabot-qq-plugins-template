@@ -102,6 +102,33 @@ export function apply(ctx) {
 `modules/mock-adapter` 是一个能直接跑的最小实现：`POST /inject` 模拟平台消息，
 `GET /outbox` 看它发了什么，指令 `whoami` 证明业务插件不认识具体平台。
 
+## 一份插件多份配置（实例）
+
+清单里写 `aurabot.reusable: true`（适配器默认就是 true），同一份代码就能跑多份配置——
+典型场景是同一个平台接两个账号。用户配置长这样，宿主按 `ext.<id>.instances` 逐个调
+`apply(ctx, config)`：
+
+```json
+{
+  "ext": {
+    "mock-adapter": {
+      "platform": "mock",
+      "instances": [
+        { "id": "second", "config": { "platform": "mock2" } }
+      ]
+    }
+  }
+}
+```
+
+- `id` 是实例名（字母或数字开头，可用 `-` 和 `_`）；不写 instances 就只有主实例
+- `config` 只写和主配置不一样的值，宿主按「主配置 + 实例覆盖」合并后传给 `apply`
+- 每个实例各有自己的 `ctx.settings()`、`ctx.dataDir()` 和路由前缀 `/ext/<id>/i/<实例名>`
+- 面板「扩展」页会给 `reusable` 的插件自动出实例卡片（加 / 删 / 启停）
+
+插件里的 `ctx.adapter()` 不用为多实例写特例：宿主本来就会为每个实例各调一次 `apply`，
+你只要保证 `connect()` 用的是传进来的 `config`。
+
 每个模块：
 
 ```
