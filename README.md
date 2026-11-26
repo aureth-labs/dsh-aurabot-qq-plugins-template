@@ -56,7 +56,51 @@ modules/ping/                   # 示例：指令 + AI 工具 + 面板路由
 modules/bv-parse/               # 示例：中间件抢在模型前拦消息 + 同名指令，无面板
 modules/auto-reply/             # 示例：关键词自动回复，带自己的面板与 GET/POST 接口
 modules/remind/                 # 示例：给模型的工具 + 指令 + 随卸载自动清的定时器
+modules/mock-adapter/           # 示例：适配器即插件——注册一个不联网的平台，HTTP 注入消息
 ```
+
+## 适配器也是插件
+
+想让框架接入一个新平台，不用改宿主：写一个普通插件，调 `ctx.adapter(spec)` 就行。
+
+```ts
+export function apply(ctx) {
+  ctx.adapter({
+    platform: 'discord',
+    name: 'Discord',
+    capabilities: ['text', 'at', 'image'],
+
+    async connect(config, runtime) {
+      // 连上平台，返回一个 bot；之后收到消息就 runtime.emitMessage(…)
+      const bot = await loginToDiscord(config.token, {
+        onMessage: (raw) => runtime.emitMessage({
+          type: raw.guildId ? 'group' : 'private',
+          channelId: raw.channelId,
+          userId: raw.authorId,
+          userName: raw.authorName,
+          content: raw.text,
+          raw,
+        }),
+      })
+      return {
+        id: bot.userId,
+        platform: 'discord',
+        selfId: bot.userId,
+        status: 'online',
+        supports: (capability) => ['text', 'at', 'image'].includes(capability),
+        sendMessage: (channelId, content) => bot.send(channelId, content),
+        sendPrivateMessage: (userId, content) => bot.dm(userId, content),
+      }
+    },
+  })
+}
+```
+
+宿主负责的、适配器不用管的部分：试运行闸门、`<voice>` 语音合成、平台发不了的元素降级、
+`ctx.bots` 注册与上线/下线事件、模块卸载时断开。
+
+`modules/mock-adapter` 是一个能直接跑的最小实现：`POST /inject` 模拟平台消息，
+`GET /outbox` 看它发了什么，指令 `whoami` 证明业务插件不认识具体平台。
 
 每个模块：
 
@@ -81,6 +125,10 @@ npm install
 npm run build      # tsc → lib/
 npm test
 ```
+
+开发期可以开两个终端：`npx tsc -p tsconfig.json -w` 守着编译，宿主那边
+`modules/` 目录里的文件一变就会重载这个模块（不用重启 DeepSeek Harness）。
+产物在 `lib/`，HMR 跟的是产物——所以「保存 TS」之后要等 `tsc -w` 落盘那一下。
 
 ## 发版
 

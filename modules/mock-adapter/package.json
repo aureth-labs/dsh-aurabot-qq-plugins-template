@@ -1,0 +1,28 @@
+{
+  "name": "mock-adapter",
+  "version": "1.0.0",
+  "description": "模板示例：适配器即插件——不联网的演示平台，用 HTTP 注入消息验证管线。",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "author": "shangxueink",
+  "main": "lib/index.js",
+  "aurabot": {
+    "displayName": "示例：演示适配器",
+    "category": "tool",
+    "capabilities": [],
+    "minPluginVersion": "1.3.0",
+    "api": 2,
+    "platforms": [
+      "*"
+    ]
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "check": "tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "typescript": "^5.6.3"
+  }
+}
