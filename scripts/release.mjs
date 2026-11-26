@@ -22,7 +22,11 @@ const writeJson = (path, value) => {
   mkdirSync(dirname(path), { recursive: true })
   writeFileSync(path, JSON.stringify(value, null, 2) + '\n')
 }
-const run = (cmd, args, cwd) => execFileSync(cmd, args, { cwd, stdio: 'inherit', shell: process.platform === 'win32' })
+function run(cmd, args, cwd) {
+  const env = { ...process.env }
+  if (args.includes('--ignore-scripts')) delete env.npm_config_allow_scripts
+  execFileSync(cmd, args, { cwd, env, stdio: 'inherit', shell: process.platform === 'win32' })
+}
 
 /** 最小的 zip 写入：文件顺序、时间都固定，同样内容得到同样的字节。 */
 function makeZip(files) {
@@ -122,6 +126,7 @@ function main() {
   const state = existsSync(STATE_FILE) ? readJson(STATE_FILE) : {}
   const seen = new Set()
   const published = []
+  const preview = []
 
   for (const entry of readdirSync(MODULES, { withFileTypes: true })) {
     if (!entry.isDirectory() || entry.name.startsWith('.')) continue
@@ -131,7 +136,7 @@ function main() {
 
     const pkg = readJson(pkgPath)
     seen.add(pkg.name)
-    if (state[pkg.name] === pkg.version) {
+    if (!DRY && state[pkg.name] === pkg.version) {
       console.log(`- ${pkg.name}@${pkg.version} 没有变化，跳过`)
       continue
     }
@@ -141,7 +146,12 @@ function main() {
     // dry-run 只验构建：不写 artifact 地址、不记版本。
     // 写进去的 URL 会缺 GITHUB_REPOSITORY（变成 https://github//…），
     // 状态文件被提前记上版本还会让下一次真正的 CI 直接跳过这个版本。
-    if (!DRY) {
+    if (DRY) {
+      const manifestPath = join(DIST,'manifests',pkg.name,'package.json')
+      const artifact = { url: 'https://preview.invalid/' + result.file, sha256: result.sha256, size: result.size }
+      writeJson(manifestPath, { ...pkg, aurabot: { ...pkg.aurabot, artifact } })
+      preview.push(JSON.stringify({ url: manifestPath, owner: process.env.AURABOT_PREVIEW_OWNER || 'preview' }))
+    } else {
       pkg.aurabot = pkg.aurabot || {}
       pkg.aurabot.artifact = { url: result.url, sha256: result.sha256, size: result.size }
       writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n')
@@ -161,6 +171,8 @@ function main() {
   console.log(published.join('\n'))
 
   if (DRY) {
+    mkdirSync(DIST,{recursive:true})
+    writeFileSync(join(DIST,'registry.jsonl'),preview.join('\n')+'\n')
     console.log('dry-run：产物在 dist/，没有发 Release、没有提交')
     return
   }
