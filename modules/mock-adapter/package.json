@@ -16,7 +16,12 @@
     "api": 2,
     "platforms": [
       "*"
-    ]
+    ],
+    "artifact": {
+      "url": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/releases/download/mock-adapter-v1.0.0/mock-adapter-v1.0.0.zip",
+      "sha256": "48915d056c7e62c2cabae715d50efb66a960d9ff29778ee0be06c54a82ff62bb",
+      "size": 3562
+    }
   },
   "scripts": {
     "build": "node build.mjs",

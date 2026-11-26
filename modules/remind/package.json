@@ -21,8 +21,8 @@
     "reloadOnConfig": true,
     "artifact": {
       "url": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/releases/download/remind-v1.0.0/remind-v1.0.0.zip",
-      "sha256": "94c45ea10947979f142bd26527c11876d1620d15cdd934b259d089ee339465f5",
-      "size": 4133
+      "sha256": "0947d4b576c14b8760cc1c9aaee1f6bfb3efbf3dfafea0c41e6e6cc88c503071",
+      "size": 4353
     }
   },
   "scripts": {

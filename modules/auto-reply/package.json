@@ -21,8 +21,8 @@
     ],
     "artifact": {
       "url": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/releases/download/auto-reply-v1.0.0/auto-reply-v1.0.0.zip",
-      "sha256": "bf855691b1ae2cd71eb488df343839978ccad2baab4d7d73075639fa011dbe87",
-      "size": 6417
+      "sha256": "ca0ee4f81be5140ae2dd193d3e72d8999cb3355e4c963a92d8649fd68c11faea",
+      "size": 6428
     }
   },
   "scripts": {

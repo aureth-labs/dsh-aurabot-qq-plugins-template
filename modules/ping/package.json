@@ -19,8 +19,8 @@
     ],
     "artifact": {
       "url": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/releases/download/ping-v1.0.2/ping-v1.0.2.zip",
-      "sha256": "ea9c2c60859eb93cb4d9ecb2f5477f2c412f12bfe3f8664953e45cd8ab8f515a",
-      "size": 3870
+      "sha256": "58b52628469d30ccc588d56f5a8d297c45575c59c12d278580c36a085f22ec67",
+      "size": 3881
     }
   },
   "scripts": {
