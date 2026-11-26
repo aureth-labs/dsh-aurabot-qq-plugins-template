@@ -6,7 +6,7 @@
 import { execFileSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
-import { dirname, join, relative, sep } from 'node:path'
+import { basename, delimiter, dirname, join, relative, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { crc32, deflateRawSync } from 'node:zlib'
 
@@ -22,10 +22,25 @@ const writeJson = (path, value) => {
   mkdirSync(dirname(path), { recursive: true })
   writeFileSync(path, JSON.stringify(value, null, 2) + '\n')
 }
+function previewOwner() {
+  if (process.env.AURABOT_PREVIEW_OWNER) return process.env.AURABOT_PREVIEW_OWNER
+  if (REPO) return REPO.split('/')[0]
+  try {
+    const origin = execFileSync('git', ['remote', 'get-url', 'origin'], { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] })
+    return /github\.com[/:]([a-z0-9-]+)\/[^/]+$/i.exec(origin.trim())?.[1] || 'preview'
+  } catch { return 'preview' }
+}
+
 function run(cmd, args, cwd) {
   const env = { ...process.env }
   if (args.includes('--ignore-scripts')) delete env.npm_config_allow_scripts
-  execFileSync(cmd, args, { cwd, env, stdio: 'inherit', shell: process.platform === 'win32' })
+  if (cmd === 'npm' && process.platform === 'win32') {
+    const cli = [env.npm_execpath, ...[dirname(process.execPath), ...(env.PATH || '').split(delimiter)]
+      .map(dir => join(dir, 'node_modules/npm/bin/npm-cli.js'))]
+      .find(path => path && basename(path) === 'npm-cli.js' && existsSync(path))
+    if (!cli) throw new Error('找不到 npm-cli.js，请通过 npm 运行构建')
+    execFileSync(process.execPath, [cli, ...args], { cwd, env, stdio: 'inherit' })
+  } else execFileSync(cmd, args, { cwd, env, stdio: 'inherit' })
 }
 
 /** 最小的 zip 写入：文件顺序、时间都固定，同样内容得到同样的字节。 */
@@ -127,6 +142,7 @@ function main() {
   const seen = new Set()
   const published = []
   const preview = []
+  const owner = DRY ? previewOwner() : undefined
 
   for (const entry of readdirSync(MODULES, { withFileTypes: true })) {
     if (!entry.isDirectory() || entry.name.startsWith('.')) continue
@@ -150,7 +166,7 @@ function main() {
       const manifestPath = join(DIST,'manifests',pkg.name,'package.json')
       const artifact = { url: 'https://preview.invalid/' + result.file, sha256: result.sha256, size: result.size }
       writeJson(manifestPath, { ...pkg, aurabot: { ...pkg.aurabot, artifact } })
-      preview.push(JSON.stringify({ url: manifestPath, owner: process.env.AURABOT_PREVIEW_OWNER || 'preview' }))
+      preview.push(JSON.stringify({ url: manifestPath, owner }))
     } else {
       pkg.aurabot = pkg.aurabot || {}
       pkg.aurabot.artifact = { url: result.url, sha256: result.sha256, size: result.size }
