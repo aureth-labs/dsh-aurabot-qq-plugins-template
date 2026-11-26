@@ -55,6 +55,7 @@ modules/hello/                  # 示例：指令 + AI 工具 + 面板路由
 modules/ping/                   # 示例：指令 + AI 工具 + 面板路由
 modules/bv-parse/               # 示例：中间件抢在模型前拦消息 + 同名指令，无面板
 modules/auto-reply/             # 示例：关键词自动回复，带自己的面板与 GET/POST 接口
+modules/remind/                 # 示例：给模型的工具 + 指令 + 随卸载自动清的定时器
 ```
 
 每个模块：
