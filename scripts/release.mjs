@@ -138,16 +138,21 @@ function main() {
 
     console.log(`+ 构建 ${pkg.name}@${pkg.version}`)
     const result = buildAndPackage(dir, pkg)
-    pkg.aurabot = pkg.aurabot || {}
-    pkg.aurabot.artifact = { url: result.url, sha256: result.sha256, size: result.size }
-    writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n')
-    state[pkg.name] = pkg.version
+    // dry-run 只验构建：不写 artifact 地址、不记版本。
+    // 写进去的 URL 会缺 GITHUB_REPOSITORY（变成 https://github//…），
+    // 状态文件被提前记上版本还会让下一次真正的 CI 直接跳过这个版本。
+    if (!DRY) {
+      pkg.aurabot = pkg.aurabot || {}
+      pkg.aurabot.artifact = { url: result.url, sha256: result.sha256, size: result.size }
+      writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n')
+      state[pkg.name] = pkg.version
+    }
     published.push(`${pkg.name}@${pkg.version} → ${result.file}（${result.size} 字节）`)
   }
 
   // 模块被删掉后，状态里也不留
   for (const name of Object.keys(state)) if (!seen.has(name)) delete state[name]
-  writeJson(STATE_FILE, state)
+  if (!DRY) writeJson(STATE_FILE, state)
 
   if (!published.length) {
     console.log('没有需要发布的模块')
