@@ -17,7 +17,12 @@
     "platforms": [
       "*"
     ],
-    "reloadOnConfig": true
+    "reloadOnConfig": true,
+    "artifact": {
+      "url": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/releases/download/ping-v2.0.0-beta.1/ping-v2.0.0-beta.1.zip",
+      "sha256": "5ce8d3df921d4f611b14eb1a628ad9af92b49b9cb80bdaf29f05933f5564c74b",
+      "size": 3330
+    }
   },
   "scripts": {
     "build": "node build.mjs",

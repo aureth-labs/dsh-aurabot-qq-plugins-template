@@ -19,7 +19,12 @@
     "platforms": [
       "*"
     ],
-    "reloadOnConfig": true
+    "reloadOnConfig": true,
+    "artifact": {
+      "url": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/releases/download/hello-v2.0.0-beta.1/hello-v2.0.0-beta.1.zip",
+      "sha256": "621894b1ff251e58147274c7934bbcde95c8ee5d42761614e67dd9ec491f27f1",
+      "size": 3465
+    }
   },
   "scripts": {
     "build": "node build.mjs",

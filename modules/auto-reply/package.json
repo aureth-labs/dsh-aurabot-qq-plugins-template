@@ -18,7 +18,12 @@
     "api": 2,
     "platforms": [
       "*"
-    ]
+    ],
+    "artifact": {
+      "url": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/releases/download/auto-reply-v2.0.0-beta.1/auto-reply-v2.0.0-beta.1.zip",
+      "sha256": "8ec7478b28ee1188191facd64f6e6dde6201f6d5a0af7260f84281068ee2cc3a",
+      "size": 5709
+    }
   },
   "scripts": {
     "build": "node build.mjs",
